@@ -48,3 +48,10 @@ Reasoning:
 - Prevents test activity from affecting Production.
 - Makes environment promotion easy to understand and demonstrate.
 - Mirrors common real-world deployment practice without adding unnecessary multi-account complexity.
+
+## Lambda IAM Trust Policy
+
+`iam/trust-policy.json` allows the AWS Lambda service (`lambda.amazonaws.com`) to assume the Development execution role.
+
+Trust policy = who can use the role.  
+Permissions policy = what the role can do.
