@@ -1,3 +1,4 @@
 .project/
 src/lambda_function.zip
 response.json
+.DS_Store

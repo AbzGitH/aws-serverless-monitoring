@@ -1,15 +1,31 @@
 import json
+import uuid
+import boto3
+
+# Create a DynamoDB resource in the same AWS region as the Lambda function.
+dynamodb = boto3.resource("dynamodb")
+
+# Development table used by this Lambda function.
+table = dynamodb.Table("serverless-monitoring-dev")
 
 
 def lambda_handler(event, context):
+    # Generate a unique ID for each incoming request.
+    request_id = str(uuid.uuid4())
+
+    # Store a simple application record in DynamoDB.
+    table.put_item(
+        Item={
+            "requestId": request_id,
+            "message": "Serverless monitoring request received"
+        }
+    )
+
     # Return a successful HTTP-style response.
     return {
-        # 200 is the standard HTTP status code for "OK / success".
         "statusCode": 200,
-
-        # API Gateway expects the response body as a string,
-        # so json.dumps() converts this Python dictionary into JSON text.
         "body": json.dumps({
-            "message": "Serverless monitoring function is working"
+            "message": "Request stored successfully",
+            "requestId": request_id
         })
     }
