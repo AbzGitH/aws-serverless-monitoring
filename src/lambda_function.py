@@ -1,12 +1,13 @@
 import json
 import uuid
 import boto3
+import os
 
 # Create a DynamoDB resource in the same AWS region as the Lambda function.
 dynamodb = boto3.resource("dynamodb")
 
 # Development table used by this Lambda function.
-table = dynamodb.Table("serverless-monitoring-dev")
+table = dynamodb.Table(os.environ["TABLE_NAME"])
 
 
 def lambda_handler(event, context): 
