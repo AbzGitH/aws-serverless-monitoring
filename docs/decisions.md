@@ -94,3 +94,48 @@ The Lambda function is granted only the actions and resource access required by 
 - Trust policy = who can assume a role.
 - Permissions policy = what the role can do.
 - Least privilege = only the required actions against the required resources.
+
+## Security and Operational Decisions
+
+### IAM Least Privilege
+
+Each Lambda environment uses its own IAM role and environment-specific DynamoDB policy.
+
+The DynamoDB policies allow only:
+
+- `dynamodb:PutItem`
+- `dynamodb:GetItem`
+
+Each policy is restricted to that environment's DynamoDB table.
+
+This reduces blast radius and prevents one environment from accessing another environment's data.
+
+### API Exposure
+
+The current API Gateway route uses no authentication.
+
+This is acceptable for this portfolio/demo project because the endpoint does not handle sensitive customer or business data.
+
+In a production system handling sensitive workloads, authentication and authorization would normally be added.
+
+### CloudWatch Log Retention
+
+The Development, UAT and Production Lambda log groups use a 14-day retention period.
+
+This provides enough recent history for troubleshooting while avoiding indefinite log storage.
+
+### DynamoDB Capacity Mode
+
+All DynamoDB tables use `PAY_PER_REQUEST`.
+
+This is suitable for a low-volume portfolio workload because capacity is consumed only when reads and writes occur, rather than reserving throughput in advance.
+
+### Lambda Configuration
+
+All environments use:
+
+- Python 3.12
+- 128 MB memory
+- 3-second timeout
+
+Keeping these settings consistent reduces configuration drift between Development, UAT and Production.
